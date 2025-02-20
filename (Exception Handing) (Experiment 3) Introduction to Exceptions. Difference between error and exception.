@@ -1,0 +1,122 @@
+// 1. Java program to calculate the square root with exception handling
+import java.util.Scanner;
+
+public class SquareRootCalculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a number: ");
+        try {
+            double number = scanner.nextDouble();
+            if (number < 0) {
+                throw new IllegalArgumentException("Error: Cannot calculate the square root of a negative number.");
+            }
+            System.out.println("Square root: " + Math.sqrt(number));
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
+}
+
+// 2. ATM Withdrawal System with Exception Handling
+import java.util.Scanner;
+
+class InvalidPINException extends Exception {
+    public InvalidPINException(String message) {
+        super(message);
+    }
+}
+
+class InsufficientBalanceException extends Exception {
+    public InsufficientBalanceException(String message) {
+        super(message);
+    }
+}
+
+public class ATMSystem {
+    private static final int CORRECT_PIN = 1234;
+    private static double balance = 3000;
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.print("Enter PIN: ");
+            int pin = scanner.nextInt();
+            if (pin != CORRECT_PIN) {
+                throw new InvalidPINException("Error: Invalid PIN.");
+            }
+            System.out.print("Withdraw Amount: ");
+            double amount = scanner.nextDouble();
+            if (amount > balance) {
+                throw new InsufficientBalanceException("Error: Insufficient balance.");
+            }
+            balance -= amount;
+            System.out.println("Withdrawal successful. Remaining Balance: " + balance);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            System.out.println("Current Balance: " + balance);
+            scanner.close();
+        }
+    }
+}
+
+// 3. University Enrollment System with Custom Exceptions
+import java.util.*;
+
+class CourseFullException extends Exception {
+    public CourseFullException(String message) {
+        super(message);
+    }
+}
+
+class PrerequisiteNotMetException extends Exception {
+    public PrerequisiteNotMetException(String message) {
+        super(message);
+    }
+}
+
+class Course {
+    private String name;
+    private int maxStudents;
+    private int enrolledStudents;
+    private String prerequisite;
+    
+    public Course(String name, int maxStudents, String prerequisite) {
+        this.name = name;
+        this.maxStudents = maxStudents;
+        this.prerequisite = prerequisite;
+        this.enrolledStudents = 0;
+    }
+    
+    public void enrollStudent(String student, boolean hasPrerequisite) throws CourseFullException, PrerequisiteNotMetException {
+        if (!hasPrerequisite) {
+            throw new PrerequisiteNotMetException("Error: Complete " + prerequisite + " before enrolling in " + name + ".");
+        }
+        if (enrolledStudents >= maxStudents) {
+            throw new CourseFullException("Error: " + name + " is full.");
+        }
+        enrolledStudents++;
+        System.out.println(student + " successfully enrolled in " + name);
+    }
+}
+
+public class UniversityEnrollmentSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Course advancedJava = new Course("Advanced Java", 2, "Core Java");
+        
+        try {
+            System.out.print("Enter student name: ");
+            String student = scanner.next();
+            System.out.print("Has completed Core Java? (true/false): ");
+            boolean hasPrerequisite = scanner.nextBoolean();
+            advancedJava.enrollStudent(student, hasPrerequisite);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            scanner.close();
+        }
+    }
+}
